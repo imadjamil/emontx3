@@ -31,21 +31,23 @@ void setup(void)
 
   // Start up the library
   sensors.begin();
+  delay(1000);  //added to give the onewire stuff time to initialize.
+  sensors.requestTemperatures();
 
   // Grab a count of devices on the wire
   numberOfDevices = sensors.getDeviceCount();
 
   // locate devices on the bus
-  Serial.print("Locating devices...");
+  //Serial.print("Locating devices...");
 
-  Serial.print("Found ");
-  Serial.print(numberOfDevices, DEC);
-  Serial.println(" devices.");
+  //Serial.print("Found ");
+  //Serial.print(numberOfDevices, DEC);
+  //Serial.println(" devices.");
 
   // report parasite power requirements
-  Serial.print("Parasite power is: ");
-  if (sensors.isParasitePowerMode()) Serial.println("ON");
-  else Serial.println("OFF");
+  //Serial.print("Parasite power is: ");
+  //if (sensors.isParasitePowerMode()) Serial.println("ON");
+  //else Serial.println("OFF");
 
   // Loop through each device, print out address
   for(int i=0;i<numberOfDevices; i++)
@@ -54,22 +56,23 @@ void setup(void)
     if(sensors.getAddress(tempDeviceAddress, i))
 	{
 
-		Serial.print("Found device ");
-		Serial.print(i, DEC);
-		Serial.print(" with address: ");
-		printAddress(tempDeviceAddress);
-		Serial.println();
+		//Serial.print("Found device ");
+		//Serial.print(i, DEC);
+		//Serial.print(" with address: ");
+		//printAddress(tempDeviceAddress);
+		//Serial.println();
 
-		Serial.print("Setting resolution to ");
-		Serial.println(TEMPERATURE_PRECISION, DEC);
+		//Serial.print("Setting resolution to ");
+		//Serial.println(TEMPERATURE_PRECISION, DEC);
 
 		// set the resolution to TEMPERATURE_PRECISION bit (Each Dallas/Maxim device is capable of several different resolutions)
 		sensors.setResolution(tempDeviceAddress, TEMPERATURE_PRECISION);
 
-		Serial.print("Resolution actually set to: ");
-		Serial.print(sensors.getResolution(tempDeviceAddress), DEC);
-		Serial.println();
+		//Serial.print("Resolution actually set to: ");
+		//Serial.print(sensors.getResolution(tempDeviceAddress), DEC);
+		//Serial.println();
     sensors.requestTemperatures();
+    delay(1000);  //some DS19B20 can take 750ms to perform temp conversion. Fix for 2021 batch of RJ45 temp sensors 
     Serial.print("Temperature: ");
     float tempC = sensors.getTempC(tempDeviceAddress);
     if ((tempC<80.0) && (tempC>-10.0)){
@@ -110,12 +113,12 @@ void printTemperature(DeviceAddress deviceAddress)
   Serial.println(DallasTemperature::toFahrenheit(tempC)); // Converts tempC to Fahrenheit
 }
 
-void loop(void)
+void loop()
 {
 
-  while(1){
+ // while(1){
 
-  }
+  //}
   // // call sensors.requestTemperatures() to issue a global temperature
   // // request to all devices on the bus
   // Serial.print("Requesting temperatures...");
@@ -139,6 +142,21 @@ void loop(void)
 	// //else ghost device! Check your power requirements and cabling
   //
   // }
+
+
+      delay(1000);  //some DS19B20 can take 750ms to perform temp conversion. Fix for 2021 batch of RJ45 temp sensors
+    Serial.print("Temperature: ");
+    float tempC = sensors.getTempC(tempDeviceAddress);
+    if ((tempC<80.0) && (tempC>-10.0)){
+      Serial.print(tempC);
+      Serial.println();
+      digitalWrite(LEDpin, HIGH);
+    } else {
+      Serial.print("ERROR temperature out of limit ");
+      Serial.print(tempC);
+      digitalWrite(LEDpin, LOW);
+    }
+
 }
 
 // function to print a device address

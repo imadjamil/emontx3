@@ -31,6 +31,8 @@
 
 
 Change Log:
+V3.4   05/01/21 Slow down DS18B20 conversion - required for new batch of RJ45 temp sensors 
+V3.3   05/12/19 Fix RFM factory test
 V3.2   27/08/19 Add watchdog reset
 V3.1   25/05/18 Add prompt for serial config
 V3.0   16/01/18 Return zero reading when CT is disconnected and always sample from all CT's when powered by AC-AC (negate CT's required plugged in before startup)
@@ -85,7 +87,7 @@ EnergyMonitor ct1, ct2, ct3, ct4;
 #include <DallasTemperature.h>                                        //http://download.milesburton.com/Arduino/MaximTemperature/DallasTemperature_LATEST.zip
 
 
-const byte version = 33;         // firmware version divide by 10 to get version number e,g 16 = v1.6
+const byte version = 34;         // firmware version divide by 10 to get version number e,g 16 = v1.6
 boolean DEBUG = 1;                       // Print serial debug
 
 //----------------------------emonTx V3 Settings---------------------------------------------------------------------------------------------------------------
@@ -114,7 +116,7 @@ const int ACAC_DETECTION_LEVEL=   3000;
 const byte min_pulsewidth= 110;                                // minimum width of interrupt pulse (default pulse output meters = 100ms)
 const int TEMPERATURE_PRECISION=  11;                          //9 (93.8ms),10 (187.5ms) ,11 (375ms) or 12 (750ms) bits equal to resplution of 0.5C, 0.25C, 0.125C and 0.0625C
 const byte MaxOnewire=             6;
-#define ASYNC_DELAY 375                                          // DS18B20 conversion delay - 9bit requres 95ms, 10bit 187ms, 11bit 375ms and 12bit resolution takes 750ms
+#define ASYNC_DELAY 750                                          // DS18B20 conversion delay - 9bit requres 95ms, 10bit 187ms, 11bit 375ms and 12bit resolution takes 750ms
 //-------------------------------------------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------
 
